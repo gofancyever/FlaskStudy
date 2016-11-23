@@ -1,12 +1,10 @@
-
+#_*_coding:UTF-8_*_
 from Blog import app
 from flask import Flask, render_template,session,redirect,url_for,flash
 
-from flask_bootstrap import Bootstrap
+
 from forms import NameForm
-
-
-bootstrap = Bootstrap(app)
+import models
 
 
 @app.route('/')
@@ -19,9 +17,13 @@ def formF():
     name = None
     form = NameForm()
     if form.validate_on_submit():
-        old_name = session.get('name')
-        if old_name is not  None and old_name != form.name.data:
-            flash('Looks like you have change you name!')
+        user = models.User.query.filter_by(username = form.name.data).first()
+        if user is None:
+            user = models.User(username = form.name.data)
+            models.db.session.add(user)
+            session['known'] = False
+        else:
+            session['known'] = True
         session['name'] = form.name.data
-        return redirect(url_for('formF'))
-    return render_template('form.html', form=form, name=session.get('name'))
+        form.name.data = ''
+    return render_template('form.html',form = form, known = session.get('known',False))

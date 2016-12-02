@@ -6,5 +6,4 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 manager = Manager(app)
 
-
 from app import views,models

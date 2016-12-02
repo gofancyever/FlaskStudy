@@ -1,3 +1,6 @@
+from sqlalchemy import Column,Integer,String
+from sqlalchemy import DateTime
+from db_create import Base
 from app import db
 from sqlalchemy import Integer,Column,String,ForeignKey,DateTime
 from sqlalchemy.orm import relationship
@@ -19,6 +22,3 @@ class User(Base):
     nickname = Column(String(64),index=True,unique=True)
     email = Column(String(120),index=True,unique=True)
     posts = relationship('Post',backref = 'author',lazy = 'dynamic')
-
-    def __repr__(self):
-        return '<User %r>' % (self.nickname)
